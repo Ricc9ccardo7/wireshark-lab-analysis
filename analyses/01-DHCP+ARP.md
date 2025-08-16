@@ -36,7 +36,7 @@ Il ciclo DORA si chiude con il DHCP ACK, filtrato così:
 
 `udp.srcport==67 && udp.dstport==68 && dhcp.option.dhcp==5 && dhcp.id==0x51dcd0c3`
 
-È al frame 174. Qui il lease diventa effettivo: il server conferma l’allocazione e inserisce i parametri finali. Tra questi leggo il Lease Time (opzione 51) = 43200 secondi, cioè 12 ore; un valore molto comune su reti casalinghe. Questo numero guida il comportamento del client per i futuri rinnovi (T1/T2), quindi non è un dettaglio cosmetico: determina quando il client inizierà a rinegoziare per mantenere l’IP. A questo punto posso dire che il conteggio dei pacchetti DHCP per questo handshake, filtrando per `dhcp.id==0x51dcd0c3`, è 4 (Discover, Offer, Request, ACK). Tutto pulito, nessun NAK o retry sospetti.
+È al frame 174. Qui il lease diventa effettivo: il server conferma l’allocazione e inserisce i parametri finali. Tra questi leggo il Lease Time (opzione 51) = 43200 secondi, cioè 12 ore; un valore molto comune su reti casalinghe. Questo numero guida il comportamento del client per i futuri rinnovi (T1/T2), quindi non è un dettaglio cosmetico: determina quando il client inizierà a rinegoziare per mantenere l’IP. A questo punto posso capire che il conteggio dei pacchetti DHCP per questo handshake, filtrando per `dhcp.id==0x51dcd0c3`, è 4 (Discover, Offer, Request, ACK). Tutto pulito, nessun NAK o retry sospetti.
 
 ![ ](../images/dhcp/3.png)
  
