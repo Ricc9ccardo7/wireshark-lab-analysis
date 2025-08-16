@@ -1,7 +1,0 @@
-
-
-# Titolo del Progetto
-**Analisi Scientifica del Processo DHCP, ARP e Neighbor Discovery in una LAN**
-
-## Domanda guida
-Come avviene, a livello di protocolli e pacchetti, il processo che porta un host a ottenere automaticamente un indirizzo IP, identificare il gateway di rete e verificare la disponibilità di un indirizzo nella LAN?
