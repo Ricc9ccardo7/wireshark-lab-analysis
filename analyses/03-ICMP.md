@@ -51,7 +51,7 @@ Questi pacchetti scadono immediatamente al primo hop (192.168.1.1), che mi rispo
 **Secondo passo (TTL = 2)**
 Il secondo passo utilizza Echo Request con TTL=2. In questo caso i pacchetti raggiungono il secondo router lungo il percorso, ma non ricevo alcun messaggio di risposta. Questo non significa che i pacchetti “non siano arrivati”, ma piuttosto che il router non ha inviato (o che un firewall ha bloccato) il messaggio ICMP Time Exceeded. Il risultato è un “vuoto” nella catena di hop, tipicamente rappresentato da \* nelle uscite di traceroute.
 
-![ ](../images/icmp/14.png)
+![ ](../images/icmp/14.png) 
 
 **Passo finale (TTL = 9)**
 Il traceroute prosegue con un Echo Request con TTL sufficientemente alto (TTL=9) per raggiungere la destinazione. I pacchetti numerati 1946, 1948 e 1950, filtrati con `icmp.type== 8 && ip.dst == 216.58.209.36`, arrivano a Google. La risposta, filtrata con `icmp.type== 0 && ip.src == 216.58.209.36`, è un Echo Reply con type/code 0/0 e IP sorgente 216.58.209.36, che mi conferma la raggiungibilità della destinazione.
