@@ -18,7 +18,7 @@ La risposta arriva subito come DHCP Offer. Per essere certo che è lo stesso dia
 
 Lo trovo al frame 172. Qui il server mi dice “posso darti questo indirizzo”: nel campo yiaddr propone 192.168.1.195, e mi indica anche chi è il server tramite opzione 54 (Server Identifier) con 192.168.1.1. Questo Offer tipicamente viaggia unicast verso il MAC del client, perché ormai il server conosce l’hardware address del richiedente. Scientificamente l’Offer è solo una proposta (lease proposal), quindi ancora nulla è definitivo.
  
-![ ](../images/1.png)
+![ ](../images/dhcp/1.png)
 
 ## DHCP Request
 
@@ -28,7 +28,7 @@ Subito dopo vedo il DHCP Request, che è il momento in cui il client dice “ok,
 
 Il pacchetto è al frame 173. Dentro, l’opzione 50 conferma l’IP richiesto 192.168.1.195, in piena coerenza con l’Offer. Questo messaggio torna broadcast (i server multipli devono sapere chi è stato scelto). Interessante anche l’opzione 55 (Parameter Request List): qui la lunghezza è 14 byte, cioè il client domanda un set di 14 codici opzione (router, DNS, subnet mask, lease time, ecc.). Questo è fondamentale perché guida il contenuto dell’ACK: il server cercherà di soddisfare quella lista.
  
-![ ](../images/2.png)
+![ ](../images/dhcp/2.png)
 
 ## DHCP ACK
 
@@ -38,7 +38,7 @@ Il ciclo DORA si chiude con il DHCP ACK, filtrato così:
 
 È al frame 174. Qui il lease diventa effettivo: il server conferma l’allocazione e inserisce i parametri finali. Tra questi leggo il Lease Time (opzione 51) = 43200 secondi, cioè 12 ore; un valore molto comune su reti casalinghe. Questo numero guida il comportamento del client per i futuri rinnovi (T1/T2), quindi non è un dettaglio cosmetico: determina quando il client inizierà a rinegoziare per mantenere l’IP. A questo punto posso dire che il conteggio dei pacchetti DHCP per questo handshake, filtrando per `dhcp.id==0x51dcd0c3`, è 4 (Discover, Offer, Request, ACK). Tutto pulito, nessun NAK o retry sospetti.
 
-![ ](../images/3.png)
+![ ](../images/dhcp/3.png)
  
 ## ARP per il Gateway
 
@@ -58,7 +58,7 @@ La risposta ARP arriva in unicast al mio MAC e sta al frame 176. A livello scien
 
 Per completezza controllo ancora la coerenza interna del pacchetto. Con `frame.number==176` vedo che l’opcode 2 distingue chiaramente la reply dalla request (che sarebbe opcode 1). Questo evita ambiguità quando c’è molto traffico ARP in broadcast. Inoltre, avere il MAC del gateway mi permette di diagnosticare futuri problemi: se più dispositivi rispondono per 192.168.1.1, potrei sospettare ARP spoofing o configurazioni strane. Qui invece tutto clean: una sola reply, un solo MAC, nessuna collisione.
 
- ![ ](../images/4.png)
+ ![ ](../images/dhcp/4.png)
  
 
 ## Test con ARP Probe
@@ -69,7 +69,7 @@ Passo poi a un test diverso ma utile in reti piccole...la ARP probe verso un IP 
 
 Nel capture trovo più richieste ripetute ai frame 1665, 1667, 1669, 1670, …. Il pattern ripetuto è normale: molti host mandano più probe per essere sure che la rete non perda il primo broadcast. Dal punto di vista del protocollo, è una tecnica di collision avoidance a livello IP: prima di usare o prenotare un indirizzo, controllo che nessuno lo possieda già.
 
- ![ ](../images/5.png)
+ ![ ](../images/dhcp/5.png)
 
  
 Ora voglio sapere se esistono risposte per quell’IP. Uso il filtro che pesca solo le ARP Reply con il sorgente IP corrispondente:
