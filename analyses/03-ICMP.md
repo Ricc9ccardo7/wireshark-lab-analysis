@@ -23,6 +23,9 @@ Con il MAC del gateway noto, il passo successivo è il test di connettività tra
 
 osservo pacchetti con Identifier (BE): 1 (0x0001) e numeri di sequenza 869–872. Questo è un ping che, se riceve risposta, dimostra che il gateway è raggiungibile. La risposta, catturata con `icmp.type == 0`, mostra lo stesso identifier e un TTL di 64, tipico di un router in questa rete. Questa conferma per me è fondamentale per validare il collegamento di base.
 
+![ ](../images/icmp/9.png)
+
+![ ](../images/icmp/10.png)
 ## **Ping ICMP in broadcast sulla LAN (192.168.1.255)**
 
 Proseguo con un test ICMP in broadcast verso 192.168.1.255, filtrato con:
@@ -30,6 +33,9 @@ Proseguo con un test ICMP in broadcast verso 192.168.1.255, filtrato con:
 `icmp.type == 8 && ip.dst == 192.168.1.255 && eth.dst== ff:ff:ff:ff:ff:ff`
 
 Qui il MAC di destinazione è ff\:ff\:ff\:ff\:ff\:ff. Questo tipo di ping serve a individuare tutti i dispositivi attivi nella rete. Tuttavia, in questo caso, il conteggio delle Echo Reply ricevute è pari a zero. Nessuna risposta significa che i dispositivi in rete non accettano o non rispondono a ping broadcast, una scelta comune per motivi di sicurezza. Non avendo ricevuto risposte, non posso osservare alcun IP sorgente.
+
+![ ](../images/icmp/11.png)
+![ ](../images/icmp/12.png)
 
 ## **Traceroute verso [www.google.com](http://www.google.com)**
 
@@ -40,8 +46,12 @@ La fase successiva riguarda il traceroute verso [www.google.com](http://www.goog
 
 Questi pacchetti scadono immediatamente al primo hop (192.168.1.1), che mi risponde con messaggi ICMP Time Exceeded. Questo comportamento mi conferma che il gateway è il primo nodo del percorso e che è configurato per inviare notifiche ICMP quando i pacchetti vengono scartati per TTL scaduto.
 
+![ ](../images/icmp/13.png)
+
 **Secondo passo (TTL = 2)**
 Il secondo passo utilizza Echo Request con TTL=2. In questo caso i pacchetti raggiungono il secondo router lungo il percorso, ma non ricevo alcun messaggio di risposta. Questo non significa che i pacchetti “non siano arrivati”, ma piuttosto che il router non ha inviato (o che un firewall ha bloccato) il messaggio ICMP Time Exceeded. Il risultato è un “vuoto” nella catena di hop, tipicamente rappresentato da \* nelle uscite di traceroute.
+
+![ ](../images/icmp/14.png)
 
 **Passo finale (TTL = 9)**
 Il traceroute prosegue con un Echo Request con TTL sufficientemente alto (TTL=9) per raggiungere la destinazione. I pacchetti numerati 1946, 1948 e 1950, filtrati con `icmp.type== 8 && ip.dst == 216.58.209.36`, arrivano a Google. La risposta, filtrata con `icmp.type== 0 && ip.src == 216.58.209.36`, è un Echo Reply con type/code 0/0 e IP sorgente 216.58.209.36, che mi conferma la raggiungibilità della destinazione.
