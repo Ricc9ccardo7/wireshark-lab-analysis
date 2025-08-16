@@ -18,6 +18,7 @@ La risposta arriva subito come DHCP Offer. Per essere certo che è lo stesso dia
 
 Lo trovo al frame 172. Qui il server mi dice “posso darti questo indirizzo”: nel campo yiaddr propone 192.168.1.195, e mi indica anche chi è il server tramite opzione 54 (Server Identifier) con 192.168.1.1. Questo Offer tipicamente viaggia unicast verso il MAC del client, perché ormai il server conosce l’hardware address del richiedente. Scientificamente l’Offer è solo una proposta (lease proposal), quindi ancora nulla è definitivo.
  
+![ ](images/1.png)
 
 ## DHCP Request
 
