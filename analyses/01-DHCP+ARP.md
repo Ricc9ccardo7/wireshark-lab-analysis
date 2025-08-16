@@ -1,4 +1,4 @@
-# Project 1--- Analisi del boot di rete ( DHCP DORA + ARP su private LAN )
+# Project 1--- Analisi del boot di rete ( DHCP + ARP su private LAN )
 
 **Domanda guida:** come un client ottiene automaticamente il suo IP e il MAC del gateway, e perché ogni pacchetto viene inviato in quel modo?
 
