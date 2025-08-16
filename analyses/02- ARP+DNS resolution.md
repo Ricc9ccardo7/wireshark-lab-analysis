@@ -9,7 +9,7 @@ L’analisi comincia cercando un’eventuale richiesta ARP per il server DNS 192
 
 `arp && arp.opcode == 1 && arp.dst.proto_ipv4 == 192.168.1.1`
 
-È difficile indicare con precisione quale sia la richiesta ARP inviata per trovare il server DNS di www.google.com, poiché il server DNS e il gateway condividono lo stesso indirizzo IP. Presumendo che il MAC del gateway sia già stato trovato in precedenza, mi concentro quindi sulla richiesta ARP più vicina nel tempo alla risoluzione del server di Google. In generale, la cache ARP riduce il traffico di rete evitando pacchetti inutili, ma può rendere complesso identificare l’esatto pacchetto in un’analisi come questa.
+È difficile indicare con precisione quale sia la richiesta ARP inviata per trovare il server DNS di www.google.com, poiché il server DNS e il gateway hanno lo stesso indirizzo IP. Presumendo che il MAC del gateway sia già stato trovato in precedenza, mi concentro quindi sulla richiesta ARP più vicina nel tempo alla risoluzione del server di Google. In generale, la cache ARP riduce il traffico di rete evitando pacchetti inutili, ma può rendere complesso identificare l’esatto pacchetto in un’analisi come questa.
 
 ![ ](../images/dns/6.png)
 
@@ -45,10 +45,21 @@ Il campo Flags vale 0x0100 con RD=1, cioè recursion desired attivo. Questo sign
 
 La risposta DNS corrispondente si trova al frame 1795. Ho verificato che il Transaction ID coincida con quello della query. Il campo Answer Count vale 1, quindi il server fornisce un solo record come risposta. Il nome del primo answer è www.google.com, tipo A e classe IN (0x0001).
 
-Il TTL è 64 secondi, indicando per quanto tempo la risposta può restare in cache. L’RDATA restituito è 216.58.209.36, l’indirizzo IPv4 associato al dominio richiesto.
+Il TTL è 14 secondi, indicando per quanto tempo la risposta può restare in cache. L’RDATA restituito è 216.58.209.36, l’indirizzo IPv4 associato al dominio richiesto.
+
+Answers  
+www.google.com: type A, class IN, addr 216.58.209.36  
+    Name: www.google.com  
+    Type: A (1) (Host Address)  
+    Class: IN (0x0001)  
+    Time to live: 14 (14 seconds)  
+    Data length: 4  
+    Address: 216.58.209.36  
+
+
 
 In totale, per questa ricerca compaiono due pacchetti DNS: uno di query e uno di risposta. L’RCODE è  0, cioè nessun errore, a conferma che la risoluzione è avvenuta con successo.
 
 ## Conclusioni
 
-La sequenza osservata indica che non è semplice individuare una richiesta ARP specifica per il DNS di www.google.com, poiché il server DNS condivide l’IP con il gateway e il MAC di quest’ultimo era già stato trovato in precedenza. Pertanto, l’analisi si è concentrata sulla richiesta ARP più vicina temporalmente alla risoluzione di Google. La risposta ARP al frame 1366 ha comunque confermato la mappatura IP→MAC necessaria Subito dopo, la query DNS al frame 1794 ha richiesto la risoluzione di www.google.com con Transaction ID 0x612c. La risposta al frame 1795 ha fornito l’indirizzo 216.58.209.36 con TTL di 64 secondi, completando la risoluzione in soli due pacchetti e senza errori. Questa sequenza conferma il corretto funzionamento del processo ARP+DNS nella rete analizzata
+La sequenza osservata indica che non è semplice individuare una richiesta ARP specifica per il DNS di www.google.com, poiché il server DNS condivide l’IP con il gateway e il MAC di quest’ultimo era già stato trovato in precedenza. Pertanto, l’analisi si è concentrata sulla richiesta ARP più vicina temporalmente alla risoluzione di Google. La risposta ARP al frame 1366 ha comunque confermato la mappatura IP→MAC necessaria Subito dopo, la query DNS al frame 1794 ha richiesto la risoluzione di www.google.com con Transaction ID 0x612c. La risposta al frame 1795 ha fornito l’indirizzo 216.58.209.36 con TTL di 14 secondi, completando la risoluzione in soli due pacchetti e senza errori. Questa sequenza conferma il corretto funzionamento del processo ARP+DNS nella rete analizzata
