@@ -1,0 +1,80 @@
+
+**Titolo del Progetto**
+
+**Analisi Scientifica del Processo DHCP, ARP e Neighbor Discovery in una LAN**
+
+**Domanda guida**
+
+Come avviene, a livello di protocolli e pacchetti, il processo che porta un host a ottenere automaticamente un indirizzo IP, identificare il gateway di rete e verificare la disponibilità di un indirizzo nella LAN?
+
+**Introduzione**
+
+In questa indagine ho analizzato il flusso di pacchetti che un host genera e riceve quando viene collegato a una rete locale e deve configurare automaticamente il proprio indirizzo IPv4. L’analisi è stata effettuata con Wireshark, utilizzando filtri mirati per identificare ogni fase: la sequenza **DHCP DORA** (Discover, Offer, Request, ACK), la risoluzione **ARP** verso il gateway e la fase di **ARP Probe** per un indirizzo IP non utilizzato.
+Per ogni step, oltre a riportare i dati osservati (frame number, indirizzi MAC e IP, Transaction ID, opzioni DHCP, opcode ARP, ecc.), ho incluso la spiegazione del perché il pacchetto esiste, quale ruolo ha nel protocollo e cosa implica a livello operativo.
+
+**DHCP Handshake – Il processo DORA**
+
+Il primo pacchetto rilevato è il **DHCP Discover** al frame **171**, identificato con il filtro:
+
+eth.dst == ff:ff:ff:ff:ff:ff && udp.srcport == 68 && udp.dstport == 67 && dhcp.option.dhcp == 1
+
+[Suggestion: insert screenshot of this Wireshark filter result here]
+Questo pacchetto è inviato in broadcast all’indirizzo MAC **ff:ff:ff:ff:ff:ff** dal client con MAC **14:d4:24:4d:43:43**. Il Transaction ID (xid) è **0x51dcd0c3** e serve a correlare tutti i pacchetti della stessa negoziazione. Il DHCP Discover è il segnale iniziale con cui il client annuncia la sua presenza e chiede a qualsiasi server DHCP disponibile di proporgli un indirizzo IP. Il broadcast è necessario perché il client non conosce ancora l’indirizzo del server.
+
+La risposta del server è il **DHCP Offer** al frame **172**, filtrato con:
+
+udp.srcport==67 && udp.dstport==68 && dhcp.option.dhcp==2 && dhcp.id==0x51dcd0c3
+
+Il server, identificato con IP **192.168.1.1** (opzione 54 – Server Identifier), propone al client l’indirizzo **192.168.1.195** nel campo yiaddr. L’Offer avviene in unicast verso il MAC del client. Questo messaggio rappresenta una proposta di lease, che il client potrà accettare o rifiutare.
+
+Il terzo passaggio è il **DHCP Request**, frame **173**, individuato con:
+
+udp.dstport==67 && udp.srcport==68 && dhcp.option.dhcp==3 && dhcp.id==0x51dcd0c3
+
+Qui il client conferma di voler usare l’IP **192.168.1.195** (opzione 50) e invia in broadcast la sua decisione, includendo una Parameter Request List lunga **14 byte** (opzione 55). Questa lista contiene i codici delle opzioni DHCP che il client desidera ricevere (es. router, DNS, subnet mask). Il broadcast serve per informare anche altri eventuali server DHCP che la scelta è stata fatta.
+
+Infine, il **DHCP ACK** si trova al frame **174**, con filtro:
+
+udp.srcport==67 && udp.dstport==68 && dhcp.option.dhcp==5 && dhcp.id==0x51dcd0c3
+
+[Suggestion: insert screenshot of this Wireshark filter result here]
+L’ACK conclude il processo e ufficializza l’assegnazione dell’IP al client. In questo pacchetto è incluso il Lease Time di **43200 secondi** (12 ore), che indica per quanto tempo il client potrà utilizzare l’indirizzo prima di richiederne il rinnovo.
+Filtrando per lo stesso Transaction ID si conferma che il ciclo DHCP è composto da **4 pacchetti** (Discover, Offer, Request, ACK), che rappresentano il modello DORA completo.
+
+**ARP verso il Gateway**
+
+Dopo aver ottenuto la configurazione IP, l’host deve conoscere il MAC del gateway **192.168.1.1** per poter instradare traffico fuori dalla propria subnet. Il pacchetto di richiesta ARP è il frame **175**, catturato con:
+
+arp && eth.dst==ff:ff:ff:ff:ff:ff && arp.opcode==1 && arp.dst.proto\_ipv4==192.168.1.1
+
+In questa richiesta (“Who has 192.168.1.1?”), il mittente è il MAC **14:d4:24:4d:43:43** e il target IP è appunto **192.168.1.1**. Questo passaggio è fondamentale perché, senza conoscere il MAC del gateway, l’host non potrebbe costruire correttamente le trame Ethernet per uscire dalla rete locale.
+
+La risposta arriva dal gateway al frame **176**, trovata con:
+
+arp && eth.dst==14:d4:24:4d:43:43 && arp.src.proto\_ipv4==192.168.1.1 && arp.opcode==2
+
+[Suggestion: insert screenshot of this Wireshark filter result here]
+Il campo opcode ha valore **2**, che indica una reply. Il MAC del gateway è **d8:ec:e5:ed:2e:9c**. Questa informazione viene salvata nella cache ARP dell’host per evitare ulteriori richieste e ridurre la latenza nelle comunicazioni future.
+
+**ARP Probe per un IP non utilizzato**
+
+L’ultima fase osservata riguarda le richieste ARP per verificare la disponibilità dell’indirizzo **192.168.1.250**, che l’host potrebbe voler usare. Le sonde (frames **1665, 1667, 1669, 1670, …**) sono state trovate con:
+
+arp && eth.dst==ff:ff:ff:ff:ff:ff && arp.opcode==1 && arp.dst.proto\_ipv4==192.168.1.250
+
+Il client invia più volte la domanda “Who has 192.168.1.250?” per essere sicuro della risposta.
+La verifica delle risposte è stata fatta con:
+
+arp && arp.opcode==2 && arp.src.proto\_ipv4==192.168.1.250
+
+Il conteggio restituisce **0**, confermando che nessun host ha rivendicato l’IP. Questo comportamento è tipico della verifica di un IP libero e serve a evitare conflitti di indirizzi.
+
+**Conclusioni**
+
+Questa indagine ha permesso di ricostruire in ordine cronologico il percorso che un host segue per configurarsi su una rete:
+
+1. **DHCP DORA** per ottenere indirizzo, gateway e parametri.
+2. **ARP verso il gateway** per risolvere il MAC necessario alla comunicazione fuori subnet.
+3. **ARP Probe** per controllare la disponibilità di un IP.
+
+L’uso di filtri specifici in Wireshark ha permesso di identificare con precisione ogni pacchetto e di comprendere il ruolo di ogni campo. L’analisi dimostra come protocolli di livello 2 e 7 dell’OSI collaborino per realizzare la connettività di base in una LAN.
