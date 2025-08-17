@@ -62,9 +62,10 @@ L’ACK è 4013595500 (4013594088+1412) e i flag mostrano ACK puro (0x010). È l
  
 ![ ](../images/tcp_retransmition/16.png)
 
-# Gestione delle perdite e ritrasmissioni TCP
 
-##Retransmition della perdita
+
+
+## Retransmition della perdita
 
 Analizzando la cattura, noto un evento interessante... un segmento non è stato ricevuto dal server. Per individuarlo...
 
