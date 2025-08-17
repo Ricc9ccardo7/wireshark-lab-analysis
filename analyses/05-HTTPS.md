@@ -1,4 +1,4 @@
-# Progetto: Analisi di una connessione HTTPS con Wireshark
+# Project: Analisi di una connessione HTTPS 
 
 **Domanda guida:** come si costruisce passo per passo una connessione sicura HTTPS, partendo dalla scoperta del gateway locale fino alla negoziazione TLS?
 
@@ -40,7 +40,7 @@ Il mio computer chiude l’handshake con l’ACK finale:
 
 Questo pacchetto ha Acknowledgement number = 3307278009 e TTL = 128. Non trasporta dati, ma è fondamentale perché completa la three-way handshake. Solo dopo questo punto i dati applicativi possono iniziare a fluire.
  
-![ ](../image/web/20.png)
+![ ](../images/web/20.png)
 
 
 ## Inizio della negoziazione TLS
@@ -52,7 +52,7 @@ Ora il browser deve stabilire il livello sicuro sopra TCP, cioè TLS. Il primo m
 Il pacchetto mostra versione TLS = 0x0303 e Session ID length = 32. Qui il client dice al server “ecco le versioni TLS e i cipher che so usare”. 0x0303 corrisponde a TLS 1.2, una versione molto diffusa. La Session ID di 32 byte serve per la ripresa di sessione... se in futuro faccio un’altra connessione con lo stesso server, posso saltare parte della negoziazione.
  
 
-![ ](../image/web/21.png)
+![ ](../images/web/21.png)
 
 Il server risponde con il suo ServerHello:
 
@@ -60,7 +60,7 @@ Il server risponde con il suo ServerHello:
 
 I dettagli sono: versione TLS = 0x0303 e Cipher Suite = TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256 (0xc02f). Questo è il momento in cui il server decide: useremo TLS 1.2 e questa cifra AES a 128 bit in modalità GCM con SHA256. Con questa scelta, entrambi i lati hanno un set comune e possono passare alla fase successiva.
  
-![ ](../image/web/22.png)
+![ ](../images/web/22.png)
 
 
 ## Cambio di stato: ChangeCipherSpec del Client
@@ -92,7 +92,7 @@ Da questo punto in avanti non posso più osservare i dettagli applicativi, perch
 Quando l’operazione è terminata, il flusso HTTP/2 viene chiuso ordinatamente. Subito dopo anche la connessione TCP si conclude con la sequenza di pacchetti di chiusura: il client invia un FIN, il server risponde con un pacchetto combinato FIN+ACK, e il client manda il suo Last ACK. In teoria qui la chiusura sarebbe completa, ma nel capture compare anche un ulteriore ACK dal server... si tratta di un pacchetto ridondante, probabilmente generato come ritrasmissione o conferma tardiva, che non cambia la logica del teardown. In ogni caso, la connessione risulta chiusa correttamente e tutte le risorse sono state liberate senza lasciare stati pendenti
  
 
-![ ](../image/web/23.png)
+![ ](../images/web/23.png)
 
 
 ## Conclusioni
