@@ -69,7 +69,7 @@ L’ACK è 4013595500 (4013594088+1412) e i flag mostrano ACK puro (0x010). È l
 
 Analizzando la cattura, noto un evento interessante... un segmento non è stato ricevuto dal server. Per individuarlo...
 
-`tcp.stream==112 && tcp.seq==35293 && tcp.analysis.retransmission`
+`tcp.stream==112 && tcp.analysis.retransmission`
 
 Qui appare una ritrasmissione con Sequence Number(relative) 35293. L’originale però non compare nella cattura, segno che si è perso o sulla rete o nel punto di sniffing. questo significa che il flusso di byte previsto dal client ha avuto una “lacuna” e il server non ha potuto avanzare il suo ACK. È proprio questa condizione che innesca il meccanismo di controllo errore TCP.
 
