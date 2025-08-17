@@ -81,7 +81,7 @@ Il primo ACK duplicato appare al frame 11092 e porta ancora Ack = 35293. Un seco
 ![ ](../images/tcp_retransmition/17.png)
 
 
-## Fast Retransmit e recupero
+## Retransmition e recupero
 
 Dopo gli ACK duplicati, controllo il pacchetto di ritrasmissione vero e proprio. Uso di nuovo:
 
