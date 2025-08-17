@@ -88,7 +88,7 @@ Dopo gli ACK duplicati, controllo il pacchetto di ritrasmissione vero e proprio.
 
 `tcp.stream==112 && tcp.analysis.retransmission`
 
-Qui, al frame 11418, trovo una copia del segmento mancante con lo stesso numero di sequenza 35293. Questa ritrasmissione non è un tipico fast retransmit (che si attiva dopo 3 duplicati), ma è stata innescata dopo circa 20 ACK duplicati, segno di una perdita persistente. TCP reagisce così per recuperare il segmento mancante e ristabilire il flusso dei dati.
+Qui, al frame 11418, trovo una copia del segmento mancante con lo stesso numero di sequenza 35293. è stata innescata dopo circa 20 ACK duplicati, segno di una perdita persistente. TCP reagisce così per recuperare il segmento mancante e ristabilire il flusso dei dati.
 Subito dopo appare un ACK che conferma la ricezione:
 
 `tcp.stream==112 && tcp.flags.ack==1 && tcp.seq==0 && tcp.ack_raw==81739`
