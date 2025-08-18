@@ -1,6 +1,7 @@
 # Progetto di Analisi del Protocollo mDNS
 
-**Domanda guida**: come funziona il processo di discovery mDNS nella mia rete locale e quali pacchetti chiave mostrano il flusso tra query e risposte?
+**Domanda guida**: come funziona il processo di discovery mDNS nella rete locale e quali pacchetti chiave mostrano il flusso tra query e risposte?
+
 ---
 Infine, per osservare il traffico mDNS, ho digitato `chrome://cast` nel browser Chrome. Questa azione ha avviato il meccanismo di discovery dei dispositivi locali come Chromecast. Con la cattura ho potuto vedere query e risposte mDNS scambiate in broadcast sulla rete
 
