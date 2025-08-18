@@ -1,7 +1,10 @@
 
 # Project 2-- Analisi della risoluzione DNS con ARP e Query/Response
 
-**Domanda guida:** come un client ottiene il MAC del server DNS e risolve il nome [www.google.com](http://www.google.com), e perché ogni pacchetto viene inviato in quel modo?
+**Domanda guida:** come un client ottiene il MAC del server DNS e risolve domain name, e perché ogni pacchetto viene inviato in quel modo?
+
+---
+Ho aperto Google dal browser, ho effettuato una ricerca e ho cliccato un link a caso per generare traffico reale. Con queste azioni ho prodotto una serie di query e risposte DNS necessarie alla risoluzione dei domini. La cattura ha quindi mostrato come il browser interagisce con il resolver DNS della rete.
 
 ## ARP verso il server DNS
 
