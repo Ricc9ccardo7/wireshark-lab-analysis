@@ -5,6 +5,8 @@
 ---
 Infine, per osservare il traffico mDNS, ho digitato `chrome://cast` nel browser Chrome. Questa azione ha avviato il meccanismo di discovery dei dispositivi locali come Chromecast. Con la cattura ho potuto vedere query e risposte mDNS scambiate in broadcast sulla rete
 
+[Traffic capture pcap](../pcaps/mixed_traffic.pcapng)
+
 ## Inizio della Query mDNS
 
 L’analisi parte dall’identificazione del primo pacchetto inviato dal mio host. Ho applicato il filtro:
