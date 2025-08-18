@@ -6,6 +6,8 @@ Come si sviluppano e si collegano tra loro le sequenze di pacchetti ARP e ICMP i
 ---
 Per osservare il comportamento del protocollo ICMP ho lanciato diversi comandi ping, iniziando dal gateway del router, poi in broadcast a tutta la rete e infine verso un indirizzo IP libero. Durante queste prove ho potuto seguire il flusso delle comunicazioni ARP e ICMP, che parte dalla risoluzione del MAC address del gateway e continua con lo scambio di richieste e risposte di connettività. Ho incluso anche un test di ping verso un server remoto come www.google.com, così da confrontare il traffico locale con quello esterno alla rete.
 
+[Traffic capture pcap](../pcaps/mixed_traffic.pcapng)
+
 ## **Risoluzione ARP del gateway (192.168.1.1)**
 
 Comincio con la richiesta ARP per individuare il MAC address associato all'IP del gateway, 192.168.1.1. Il pacchetto di richiesta ha come mittente il mio MAC 14\:d4:24:4d:43:43 e come destinazione IP 192.168.1.1, individuato con il filtro:
