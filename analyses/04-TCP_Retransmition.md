@@ -5,6 +5,8 @@
 ---
 In questa analisi ho disattivato e riattivato la connessione Wi-Fi durante la cattura con Wireshark. Questo ha causato la perdita di pacchetti e la conseguente ritrasmissione TCP. In questo modo ho potuto vedere concretamente come il protocollo garantisce l’affidabilità della comunicazione.
 
+[Traffic capture pcap](../pcaps/mixed_traffic.pcapng)
+
 ## ARP Request per il Gateway
 
 Appena apro il capture in Wireshark, noto che il primo passo fondamentale prima di qualsiasi traffico TCP è la risoluzione ARP. Il client deve conoscere l’indirizzo MAC del gateway 192.168.1.1, altrimenti non potrebbe inoltrare pacchetti fuori dalla sua subnet. Per filtrare la richiesta uso:
