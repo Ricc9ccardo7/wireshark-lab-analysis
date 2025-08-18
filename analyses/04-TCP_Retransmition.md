@@ -2,6 +2,8 @@
 
 **Domanda guida:** come un client costruisce la connessione TCP verso un server esterno, come vengono scambiati i primi dati e in che modo il protocollo gestisce le perdite di pacchetti?
 
+---
+In questa analisi ho disattivato e riattivato la connessione Wi-Fi durante la cattura con Wireshark. Questo ha causato la perdita di pacchetti e la conseguente ritrasmissione TCP. In questo modo ho potuto vedere concretamente come il protocollo garantisce l’affidabilità della comunicazione.
 
 ## ARP Request per il Gateway
 
