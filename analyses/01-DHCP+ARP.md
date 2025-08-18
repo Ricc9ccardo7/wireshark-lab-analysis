@@ -1,6 +1,8 @@
 # Project 1--- Analisi del boot di rete ( DHCP + ARP su private LAN )
 
 **Domanda guida:** come un client ottiene automaticamente il suo IP e il MAC del gateway, e perché ogni pacchetto viene inviato in quel modo?
+---
+Per questa analisi ho avviato Wireshark e ho eseguito i comandi `ipconfig /release` e `ipconfig /renew` per forzare l’assegnazione di un nuovo indirizzo IP tramite DHCP. Successivamente ho svuotato la cache ARP con `arp -d *` così da obbligare la macchina a inviare nuove richieste di risoluzione. In questo modo ho potuto catturare il flusso completo dei pacchetti DHCP e ARP generati
 
 ## **Discovery**
 
