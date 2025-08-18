@@ -1,6 +1,9 @@
 # Project 6--  Analisi di una Connessione SSH 
 
 **Domanda guida:** come avviene l’apertura, la negoziazione e l’avvio cifrato di una connessione SSH, e quali pacchetti chiave si possono osservare in Wireshark?
+---
+Per questa analisi ho aperto una connessione remota con il comando `ssh` demo@test.rebex.net. Durante la sessione ho catturato il processo di handshake e i pacchetti successivi di mantenimento attivo.
+
 
 ## Risoluzione ARP
 La sequenza comincia come sempre con ARP. Il client vuole collegarsi al server SSH, ma prima deve sapere qual è il MAC associato all’IP del gateway. Per questo invia una richiesta ARP in broadcast:
