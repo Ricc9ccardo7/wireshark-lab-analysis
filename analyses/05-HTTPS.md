@@ -3,7 +3,7 @@
 **Domanda guida:** come si costruisce passo per passo una connessione sicura HTTPS, partendo dalla scoperta del gateway locale fino alla negoziazione TLS?
 
 ---
-Per generare traffico HTTPS ho svolto diverse attività di navigazione e download. Ho aperto Google, ho scaricato un PDF dal sito httpbin, ho inviato una richiesta `curl` a un endpoint che restituisce dati compressi e ho guardato circa 30 secondi di video su YouTube. Tutte queste azioni hanno prodotto sessioni cifrate osservabili nei pacchetti catturati.
+Per generare traffico HTTPS ho svolto diverse attività di navigazione e download. Ho aperto Google, ho scaricato un PDF dal sito httpbin, ho inviato una richiesta `curl` a un endpoint che restituisce dati compressi e ho guardato circa 30 secondi di video su YouTube. Tutte queste azioni hanno prodotto sessioni cifrate osservabili nei pacchetti catturati. In particolare, per questa analisi mi concentro sul flusso generato con httpbin
 
 ## ARP verso il Gateway
 
