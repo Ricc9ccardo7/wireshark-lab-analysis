@@ -4,6 +4,7 @@
 ---
 Per questa analisi ho aperto una connessione remota con il comando `ssh` demo@test.rebex.net. Durante la sessione ho catturato il processo di handshake e i pacchetti successivi di mantenimento attivo.
 
+[Traffic capture pcap](../pcaps/mixed_traffic.pcapng)
 
 ## Risoluzione ARP
 La sequenza comincia come sempre con ARP. Il client vuole collegarsi al server SSH, ma prima deve sapere qual è il MAC associato all’IP del gateway. Per questo invia una richiesta ARP in broadcast:
