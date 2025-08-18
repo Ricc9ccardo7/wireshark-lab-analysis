@@ -3,9 +3,8 @@
 **Domanda guida**
 Come si sviluppano e si collegano tra loro le sequenze di pacchetti ARP e ICMP in un'analisi di rete, e cosa mi rivelano sul funzionamento e lo stato della connessione?
 
-##
-
-In questa analisi seguo il flusso completo di comunicazioni ARP e ICMP osservate in un tracciato di rete, iniziando con la risoluzione del MAC address del gateway e procedendo fino ai test di connettività verso un server remoto ([www.google.com](http://www.google.com)). Ogni passaggio lo interpreto sia dal punto di vista procedurale, sia dal punto di vista del funzionamento interno dei protocolli.
+---
+Per osservare il comportamento del protocollo ICMP ho lanciato diversi comandi ping, iniziando dal gateway del router, poi in broadcast a tutta la rete e infine verso un indirizzo IP libero. Durante queste prove ho potuto seguire il flusso delle comunicazioni ARP e ICMP, che parte dalla risoluzione del MAC address del gateway e continua con lo scambio di richieste e risposte di connettività. Ho incluso anche un test di ping verso un server remoto come www.google.com, così da confrontare il traffico locale con quello esterno alla rete.
 
 ## **Risoluzione ARP del gateway (192.168.1.1)**
 
