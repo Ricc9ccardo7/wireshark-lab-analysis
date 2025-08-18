@@ -6,6 +6,8 @@
 ---
 Ho aperto Google dal browser, ho effettuato una ricerca e ho cliccato un link a caso per generare traffico reale. Con queste azioni ho prodotto una serie di query e risposte DNS necessarie alla risoluzione dei domini. La cattura ha quindi mostrato come il browser interagisce con il resolver DNS della rete.
 
+[Traffic capture pcap](../pcaps/mixed_traffic.pcapng)
+
 ## ARP verso il server DNS
 
 L’analisi comincia cercando un’eventuale richiesta ARP per il server DNS 192.168.1.1. In Wireshark uso il filtro:
