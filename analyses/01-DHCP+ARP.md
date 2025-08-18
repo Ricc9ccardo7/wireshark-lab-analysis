@@ -4,7 +4,7 @@
 ---
 Per questa analisi ho avviato Wireshark e ho eseguito i comandi `ipconfig /release` e `ipconfig /renew` per forzare l’assegnazione di un nuovo indirizzo IP tramite DHCP. Successivamente ho svuotato la cache ARP con `arp -d *` così da obbligare la macchina a inviare nuove richieste di risoluzione. In questo modo ho potuto catturare il flusso completo dei pacchetti DHCP e ARP generati
 
-[Mixed traffic capture](../pcaps/mixed_traffic.pcapng)
+[Traffic capture pcap](../pcaps/mixed_traffic.pcapng)
 
 ## **Discovery**
 
